@@ -1,0 +1,6 @@
+This is a node server.
+TO EXECUTE: Open terminal
+            run the file from the directory where server.js file is stored
+            to run, type node server.js
+
+Open multiple tabs in the browser and make api calls.
