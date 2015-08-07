@@ -19,9 +19,9 @@ app.get('/request', function(request, response) {
 
     var newRequest= {},
         connId = request.query.connId,
-        timeout =  request.query.timeout, 
-        startTime = new Date(), 
-        parsedDate = new Date(Date.parse(startTime)), 
+        timeout =  request.query.timeout,
+        startTime = new Date(),
+        parsedDate = new Date(Date.parse(startTime)),
         endTime = new Date(parsedDate.getTime() + (1*timeout));
 
     newRequest.startTime  = startTime ;
@@ -34,17 +34,17 @@ app.get('/request', function(request, response) {
 //INPUT: N/A
 //OUTPUT: respond with status of all the connections that are active with their connId and time left to close the connection
 app.get('/serverStatus', function(request, response) {
-    var outputArray = [], 
-        newDate = new Date(), 
+    var outputArray = [],
+        newDate = new Date(),
         newDateTime = (new Date(Date.parse(newDate))).getTime();
 
     for(var i = 0; i<requestsArray.length; i++){
         var j = i;
         (function(j){
             if(requestsArray[j].endTime > newDate){
-                var newOutput = {}, 
+                var newOutput = {},
                     endDateTime = (new Date(Date.parse(requestsArray[j].endTime))).getTime();
-                    
+
                 newOutput[requestsArray[j].connId] = JSON.stringify((endDateTime-newDateTime)/1000);
                 outputArray.push(newOutput);
             }
@@ -64,7 +64,7 @@ app.get('/serverStatus', function(request, response) {
 app.put('/kill', function (req, res) {
     killConnId({
         connId: req.body.connId,
-        date: new Date(),
+        date: new Date()
     }, function (resultArray) {
         res.json((resultArray));
     });
