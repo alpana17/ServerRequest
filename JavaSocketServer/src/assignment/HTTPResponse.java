@@ -25,7 +25,7 @@ public class HTTPResponse {
     public static int i = 0;
      static String input[][] = new String[100][3];
      static DateFormat df = new SimpleDateFormat("EEE MMM dd kk:mm:ss z yyyy", Locale.ENGLISH);
-    public void serve(HTTPRequest httpRequest, OutputStream outputStream, Socket socket) throws IOException, ParseException {
+    public void serve(HTTPRequest httpRequest, OutputStream outputStream, Socket socket) throws IOException, ParseException, InterruptedException {
       PrintWriter pw = new PrintWriter(outputStream, true);
       JSONObject obj = new JSONObject();
       if (httpRequest.getHttpMethod().equals("GET")){
@@ -75,7 +75,7 @@ public class HTTPResponse {
             } else {
                 pw.println("Request not supported.");
             }
-        } else if (httpRequest.getHttpMethod().equals("PUT")){
+        } else if((httpRequest.getHttpMethod().equals("PUT")) || (httpRequest.getHttpMethod().equals("POST"))){
             if(httpRequest.getResourceURI().equals("/kill")){
                 boolean found = false;
                 Date now = new Date();

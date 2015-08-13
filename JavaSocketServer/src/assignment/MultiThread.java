@@ -39,7 +39,11 @@ public class MultiThread extends Thread{
         HTTPRequest httpRequest = HTTPUtils.parseRequest(inputStream);
 
         HTTPResponse httpResponse = new HTTPResponse();
-        httpResponse.serve(httpRequest,socket.getOutputStream(), socket);
+        try {
+            httpResponse.serve(httpRequest,socket.getOutputStream(), socket);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(MultiThread.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     MultiThread(Socket serverSocket) throws IOException{

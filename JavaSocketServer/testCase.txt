@@ -1,0 +1,19 @@
+TestCase:
+    EXECUTE http://YOUR IP:6004/request?connId=12&timeout=100000 from one tab in browser
+    EXECUTE http://YOUR IP:6004/request?connId=13&timeout=60000 from another tab
+    EXECUTE http://YOUR IP:6004/serverStatus from another tab
+        OUTPUT: {"12":98}{"13":58}
+    REFRESH the tab with serverStatus call
+        OUTPUT: {"12":92}{"13":53}
+    EXECUTE http://YOUR IP:6004/kill (POST call) from POSTMAN with payload {"connId": "13"}
+
+        OUTPUT: {"status":"killed"}
+    RESEND the same call from POSTMAN
+        OUTPUT: {"status":"Invalid connId 13"}
+    REFRESH the tab with serverStatus call
+        OUTPUT: {"12":80}
+    After the timeout time
+    OUTPUT: At connId 12 browser tab
+            {"status":"ok"}
+            At connId 13 browser tab
+            {"status":"ok"}

@@ -1,0 +1,5 @@
+This is a socket server developed using Java.
+TO EXECUTE: Open project with NetBeans IDE
+            run the project
+
+Open multiple tabs in the browser and make api calls. Some examples are given in testCase.txt file.
