@@ -28,7 +28,7 @@ public class HTTPUtils {
         httpRequest.setResourceURI(ar[1]);
         httpRequest.setHttpVersion(ar[2]);
 
-        if(httpRequest.getHttpMethod().equals("PUT")){
+        if((httpRequest.getHttpMethod().equals("PUT")) || (httpRequest.getHttpMethod().equals("POST"))){
            String contentLine = bufferedReader.readLine();
             while (!contentLine.contains( "{\"connId\"")) {
 	      System.out.println(contentLine);
