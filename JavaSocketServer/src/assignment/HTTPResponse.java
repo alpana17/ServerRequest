@@ -27,6 +27,7 @@ public class HTTPResponse {
      static DateFormat df = new SimpleDateFormat("EEE MMM dd kk:mm:ss z yyyy", Locale.ENGLISH);
     public void serve(HTTPRequest httpRequest, OutputStream outputStream, Socket socket) throws IOException, ParseException {
       PrintWriter pw = new PrintWriter(outputStream, true);
+      JSONObject obj = new JSONObject();
       if (httpRequest.getHttpMethod().equals("GET")){
           
             String [] url = (httpRequest.getResourceURI()).split("\\?");
@@ -44,9 +45,8 @@ public class HTTPResponse {
                 input[i][1] = startTime.toString();
                 input[i][2] = endTime.toString();
                 i++;
-                JSONObject obj = new JSONObject();
-                obj.put("status", "ok");
                 
+                obj.put("status", "ok");
                 try {
                     Thread.currentThread().sleep(timeout);          
                 } catch(InterruptedException ex) {
@@ -59,27 +59,45 @@ public class HTTPResponse {
                 
                 String result = "";
                 JSONArray ja = new JSONArray();
-                int ar[]= new int[input.length];
                 for(int j = 0; j<input.length;j++){
                   if(input[j][0] != null ){
                         Date end = df.parse(input[j][2]);
                         if(end.compareTo(now)>0){
                             long endDateTime = (df.parse(input[j][2])).getTime();
-
                             long diff = ((endDateTime-newDateTime)/1000);
-                            ar[j] = Integer.parseInt(input[j][0]);
-                            JSONObject obj = new JSONObject();
-                            obj.put(input[j][0], diff);
-                            result += obj;
+                            JSONObject obj1 = new JSONObject();
+                            obj1.put(input[j][0], diff);
+                            result += obj1;
                         }
-                        
                     }
                 }
                 pw.println(result);
+            } else {
+                pw.println("Request not supported.");
             }
-        } else if (httpRequest.getHttpMethod().equals("POST")){
-            pw.println(httpRequest.getBody());
-            
+        } else if (httpRequest.getHttpMethod().equals("PUT")){
+            if(httpRequest.getResourceURI().equals("/kill")){
+                boolean found = false;
+                Date now = new Date();
+                for(int j = 0; j<input.length;j++){
+                    if(input[j][0] != null && input[j][0].equals(httpRequest.getBody())){
+                        Date end = df.parse(input[j][2]);
+                        if(end.compareTo(now)>0){
+                            input[j][2] = now.toString();
+                            found = true;
+                        }
+                    }
+                }
+                if(found){
+                    obj.put("status", "killed");
+                } else {
+                    obj.put("status", "Invalid connId "+httpRequest.getBody());
+                }
+                System.out.println(obj);
+                pw.println(obj);
+            } else {
+                pw.println("Request not supported.");
+            }
         }
         socket.close();
     }
